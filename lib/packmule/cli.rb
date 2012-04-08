@@ -3,6 +3,9 @@
 # Copyright (c) 2012 Nirix
 # All Rights Reserved
 #
+# PackMule is released under
+# the GNU GPL v3 only license.
+#
 
 require 'shebang'
 
