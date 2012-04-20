@@ -18,6 +18,9 @@ Now create a file called `Packfile` in your projects directory and place the fol
       - logs/
       - assets/*.psd
 
+Now all you need to do is run `packmule pack --version 1.0` inside the directory and your
+your project is packaged.
+
 The Packfile
 ------------
 
