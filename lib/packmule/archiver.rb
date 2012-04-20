@@ -12,8 +12,16 @@ module Packmule
     ##
     # Archives the shit out of the directory
     # with the passed options.
-    def archive(options)
-      # blarglolz
+    def self.create(options)
+      puts "Creating archives..."
+      
+      options[:formats].each do |format|
+        if format == 'zip'
+          Packmule::Archiver::Zip.create(options)
+        end
+      end
+      
+      puts "Done creating archives"
     end
     
     ##
@@ -21,25 +29,26 @@ module Packmule
     class Zip
       ##
       # Zips the stuff
-      def archive(options)
+      def self.create(options)
         # Make sure the archive doesn't exist..
-        if FileTest.exists? "./#{archive_name}.zip"
-          puts "#{archive_name}.zip already exists, stopping"
+        if ::FileTest.exists? "./#{options[:filename]}.zip"
+          puts "#{options[:filename]}.zip already exists, stopping"
           exit
         end
 
         # Get the needed Zip stuff
-        puts "Creating zip archive"
         gem 'rubyzip'
         require 'zip/zip'
         require 'zip/zipfilesystem'
 
         # Create the archive
-        Zip::ZipFile.open("./#{archive_name}.zip", 'w') do |z|
-          Dir["./**/**"].each do |file|
-            z.add(file.sub("./", ''), file) if not config['ignore'].include?(file.sub('./', ''))
+        ::Zip::ZipFile.open("./#{options[:filename]}.zip", 'w') do |z|
+          Dir["#{options[:dir]}/**/**"].each do |file|
+            z.add(file.sub("#{options[:dir]}/", ''), file) if not options[:ignore].include?(file.sub("#{options[:dir]}/", ''))
           end # Dir
         end # Zip block
+        
+        puts "  - #{options[:filename]}.zip created"
       end # Archive
     end # Zip class
   end # Archiver

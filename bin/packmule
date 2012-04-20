@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 require 'packmule'
-require 'packmule/version'
 require 'packmule/cli'
 
 Shebang.run

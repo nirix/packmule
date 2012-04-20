@@ -3,6 +3,10 @@
 # Copyright (c) 2012 Nirix
 # All Rights Reserved
 #
-module PackMule
-  VERSION = "0.1.0"
+# PackMule is released under
+# the GNU GPL v3 only license.
+#
+
+module Packmule
+  VERSION = "0.2.0"
 end
