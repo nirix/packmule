@@ -58,7 +58,7 @@ module Packmule
           end # Dir
         end # Zip block
         
-        puts "  - #{options[:filename]}.zip created"
+        puts " - #{options[:filename]}.zip created"
         return true
       end # self.create
     end # Zip class
@@ -80,15 +80,16 @@ module Packmule
         
         if options[:gzip] == true
           # Tar and gzip like a boss
-          `tar czf #{filename} #{options[:dir]}`
-          puts " - #{filename} created"
+          `tar czf #{filename} -C #{options[:dir]} ./`
         elsif options[:bzip] == true
           # Bzippit
-          `tar cfj #{filename} #{options[:dir]}`
-          puts " - #{filename} created"
+          `tar cfj #{filename} -C #{options[:dir]} ./`
         else
           # Totally boss taring code, yo
-          `tar cf #{filename} #{options[:dir]}`
+          `tar cf #{filename} -C #{options[:dir]} ./`
+        end
+        
+        if ::FileTest.exists? "./#{filename}"
           puts " - #{filename} created"
         end
         
