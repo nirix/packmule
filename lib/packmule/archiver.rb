@@ -17,7 +17,17 @@ module Packmule
       
       options[:formats].each do |format|
         if format == 'zip'
+          # Zipit, zipit good
           Packmule::Archiver::Zip.create(options)
+        elsif format == 'tar'
+          # TARzan
+          Packmule::Archiver::Tar.create(options)
+        elsif format == 'tar.gz'
+          # Targz, klingon pets
+          Packmule::Archiver::Tar.create(options.merge({:gzip => true}))
+        elsif format == 'tar.bz2'
+          # Tarbz2, I got nothing...
+          Packmule::Archiver::Tar.create(options.merge({:bzip => true}))
         end
       end
       
@@ -32,8 +42,8 @@ module Packmule
       def self.create(options)
         # Make sure the archive doesn't exist..
         if ::FileTest.exists? "./#{options[:filename]}.zip"
-          puts "#{options[:filename]}.zip already exists, stopping"
-          exit
+          puts "#{options[:filename]}.zip already exists, skipping"
+          return false
         end
 
         # Get the needed Zip stuff
@@ -49,7 +59,41 @@ module Packmule
         end # Zip block
         
         puts "  - #{options[:filename]}.zip created"
-      end # Archive
+        return true
+      end # self.create
     end # Zip class
+    
+    ##
+    # Tar
+    class Tar
+      ##
+      # Creates the tar file, like a BOSS!
+      def self.create(options)
+        options = {:gzip => false, :bzip => false}.merge(options)
+        filename = "#{options[:filename]}.tar" + (options[:gzip] ? '.gz' : (options[:bzip] ? '.bz2' : ''))
+        
+        # Make sure it doesn't exist..
+        if ::FileTest.exists? "./#{filename}"
+          puts "#{filename} already exists, skipping"
+          return false
+        end
+        
+        if options[:gzip] == true
+          # Tar and gzip like a boss
+          `tar czf #{filename} #{options[:dir]}`
+          puts " - #{filename} created"
+        elsif options[:bzip] == true
+          # Bzippit
+          `tar cfj #{filename} #{options[:dir]}`
+          puts " - #{filename} created"
+        else
+          # Totally boss taring code, yo
+          `tar cf #{filename} #{options[:dir]}`
+          puts " - #{filename} created"
+        end
+        
+        return true
+      end # self.create
+    end # Tar
   end # Archiver
 end
