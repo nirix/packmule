@@ -43,7 +43,7 @@ module Packmule
     
     # Remove ignored files and directories
     opt[:ignore].each do |badness|
-      ::FileUtils.rm_r Dir["#{tempdir}/#{badness}"], :secure => true
+      ::FileUtils.rm_rf Dir["#{tempdir}/#{badness}"], :secure => true
     end
     
     # Archive the directory
