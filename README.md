@@ -19,6 +19,8 @@ Now create a file called `Packfile` in your projects directory and place the fol
       - badfile.bad
       - logs/
       - assets/*.psd
+    commands:
+      - date > build-date.txt
 
 Now all you need to do is run `packmule pack --version 1.0` inside the directory and your
 your project is packaged into `MyProject-1.0.zip` and `MyProject-1.0.tar.gz`.

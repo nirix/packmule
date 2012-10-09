@@ -18,10 +18,10 @@ module Packmule
     require 'yaml'
     require 'fileutils'
     require 'tmpdir'
-    
+
     tempdir = Dir.mktmpdir
 
-    # Read the PackMule file and exit if it doesn't exist
+    # Read the Packfile and exit if it doesn't exist
     puts "Reading the Packfile..."
     begin
       config = YAML::load_file('./Packfile')
@@ -36,16 +36,25 @@ module Packmule
       :formats  => config['formats'],
       :version  => options[:version],
       :ignore   => config['ignore'],
+      :commands => config['commands']
     }
+
+    # Any commands?
+    if opt[:commands]
+      opt[:commands].each do |c|
+        # Change to tempdir and run
+        `cd #{tempdir}; #{c}`
+      end
+    end
 
     # Clone directory
     ::FileUtils.cp_r './', tempdir
-    
+
     # Remove ignored files and directories
     opt[:ignore].each do |badness|
       ::FileUtils.rm_rf Dir["#{tempdir}/#{badness}"], :secure => true
     end
-    
+
     # Archive the directory
     Packmule::Archiver.create({
       :filename => opt[:filename],
@@ -53,7 +62,7 @@ module Packmule
       :ignore   => opt[:ignore],
       :dir      => tempdir
     })
-    
+
     # Cleanup
     FileUtils.remove_entry_secure tempdir
 
