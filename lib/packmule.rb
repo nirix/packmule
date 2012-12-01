@@ -40,6 +40,9 @@ module Packmule
       :commands => config['commands']
     }
 
+    # Clone directory
+    ::FileUtils.cp_r './', tempdir
+
     # Any commands?
     if opt[:commands]
       opt[:commands].each do |c|
@@ -47,9 +50,6 @@ module Packmule
         `cd #{tempdir}; #{c}`
       end
     end
-
-    # Clone directory
-    ::FileUtils.cp_r './', tempdir
 
     # Remove ignored files and directories
     opt[:ignore].each do |badness|
