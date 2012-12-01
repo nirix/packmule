@@ -1,9 +1,10 @@
 #
-# PackMule
+# Packmule
 # Copyright (c) 2012 Nirix
 # All Rights Reserved
+# https://github.com/nirix
 #
-# PackMule is released under
+# Packmule is released under
 # the GNU GPL v3 only license.
 #
 
@@ -14,7 +15,7 @@ module Packmule
     # with the passed options.
     def self.create(options)
       puts "Creating archives..."
-      
+
       options[:formats].each do |format|
         if format == 'zip'
           # Zipit, zipit good
@@ -30,10 +31,10 @@ module Packmule
           Packmule::Archiver::Tar.create(options.merge({:bzip => true}))
         end
       end
-      
+
       puts "Done creating archives"
     end
-    
+
     ##
     # Zipper
     class Zip
@@ -57,12 +58,12 @@ module Packmule
             z.add(file.sub("#{options[:dir]}/", ''), file) if not options[:ignore].include?(file.sub("#{options[:dir]}/", ''))
           end # Dir
         end # Zip block
-        
+
         puts " - #{options[:filename]}.zip created"
         return true
       end # self.create
     end # Zip class
-    
+
     ##
     # Tar
     class Tar
@@ -71,13 +72,13 @@ module Packmule
       def self.create(options)
         options = {:gzip => false, :bzip => false}.merge(options)
         filename = "#{options[:filename]}.tar" + (options[:gzip] ? '.gz' : (options[:bzip] ? '.bz2' : ''))
-        
+
         # Make sure it doesn't exist..
         if ::FileTest.exists? "./#{filename}"
           puts "#{filename} already exists, skipping"
           return false
         end
-        
+
         if options[:gzip] == true
           # Tar and gzip like a boss
           `tar czf #{filename} -C #{options[:dir]} ./`
@@ -88,11 +89,11 @@ module Packmule
           # Totally boss taring code, yo
           `tar cf #{filename} -C #{options[:dir]} ./`
         end
-        
+
         if ::FileTest.exists? "./#{filename}"
           puts " - #{filename} created"
         end
-        
+
         return true
       end # self.create
     end # Tar

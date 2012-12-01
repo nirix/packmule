@@ -1,9 +1,10 @@
 #
-# PackMule
+# Packmule
 # Copyright (c) 2012 Nirix
 # All Rights Reserved
+# https://github.com/nirix
 #
-# PackMule is released under
+# Packmule is released under
 # the GNU GPL v3 only license.
 #
 
