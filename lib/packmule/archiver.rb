@@ -49,11 +49,10 @@ module Packmule
 
         # Get the needed Zip stuff
         gem 'rubyzip'
-        require 'zip/zip'
-        require 'zip/zipfilesystem'
+        require 'zip'
 
         # Create the archive
-        ::Zip::ZipFile.open("./#{options[:filename]}.zip", 'w') do |z|
+        ::Zip::File.open("./#{options[:filename]}.zip", 'w') do |z|
           Dir["#{options[:dir]}/**/**"].each do |file|
             z.add(file.sub("#{options[:dir]}/", ''), file) if not options[:ignore].include?(file.sub("#{options[:dir]}/", ''))
           end # Dir
