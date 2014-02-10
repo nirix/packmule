@@ -1,6 +1,6 @@
 #
 # Packmule
-# Copyright (c) 2012 Nirix
+# Copyright (c) 2012-2014 Nirix
 # All Rights Reserved
 # https://github.com/nirix
 #
@@ -45,10 +45,7 @@ module Packmule
 
     # Any commands?
     if opt[:commands]
-      opt[:commands].each do |c|
-        # Change to tempdir and run
-        `cd #{tempdir}; #{c}`
-      end
+      self.run_commands tempdir, opt[:commands]
     end
 
     # Remove ignored files and directories
@@ -69,5 +66,14 @@ module Packmule
 
     puts "Packaging complete"
     exit
+  end
+
+  ##
+  # Runs the specified commands in the specified directory.
+  def self.run_commands(dir, commands)
+    commands.each do |c|
+      # Change to tempdir and run
+      `cd #{dir}; #{c}`
+    end
   end
 end
