@@ -1,6 +1,6 @@
 #
 # Packmule
-# Copyright (c) 2012 Nirix
+# Copyright (c) 2012-2014 Nirix
 # All Rights Reserved
 # https://github.com/nirix
 #
@@ -9,5 +9,5 @@
 #
 
 module Packmule
-  VERSION = "0.4.2"
+  VERSION = "0.5.0"
 end
