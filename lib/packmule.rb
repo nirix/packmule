@@ -1,7 +1,6 @@
 #
 # Packmule
-# Copyright (c) 2012-2014 Nirix
-# All Rights Reserved
+# Copyright (c) 2012-2015 Nirix
 # https://github.com/nirix
 #
 # Packmule is released under
@@ -10,6 +9,8 @@
 
 require "packmule/version"
 require "packmule/archiver"
+require "packmule/archiver/zip"
+require "packmule/archiver/tar"
 
 module Packmule
   ##

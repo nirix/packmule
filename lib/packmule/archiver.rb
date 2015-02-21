@@ -1,7 +1,6 @@
 #
 # Packmule
-# Copyright (c) 2012 Nirix
-# All Rights Reserved
+# Copyright (c) 2012-2015 Nirix
 # https://github.com/nirix
 #
 # Packmule is released under
@@ -34,67 +33,5 @@ module Packmule
 
       puts "Done creating archives"
     end
-
-    ##
-    # Zipper
-    class Zip
-      ##
-      # Zips the stuff
-      def self.create(options)
-        # Make sure the archive doesn't exist..
-        if ::FileTest.exists? "./#{options[:filename]}.zip"
-          puts "#{options[:filename]}.zip already exists, skipping"
-          return false
-        end
-
-        # Get the needed Zip stuff
-        gem 'rubyzip'
-        require 'zip'
-
-        # Create the archive
-        ::Zip::File.open("./#{options[:filename]}.zip", 'w') do |z|
-          Dir["#{options[:dir]}/**/**"].each do |file|
-            z.add(file.sub("#{options[:dir]}/", ''), file) if not options[:ignore].include?(file.sub("#{options[:dir]}/", ''))
-          end # Dir
-        end # Zip block
-
-        puts " - #{options[:filename]}.zip created"
-        return true
-      end # self.create
-    end # Zip class
-
-    ##
-    # Tar
-    class Tar
-      ##
-      # Creates the tar file, like a BOSS!
-      def self.create(options)
-        options = {:gzip => false, :bzip => false}.merge(options)
-        filename = "#{options[:filename]}.tar" + (options[:gzip] ? '.gz' : (options[:bzip] ? '.bz2' : ''))
-
-        # Make sure it doesn't exist..
-        if ::FileTest.exists? "./#{filename}"
-          puts "#{filename} already exists, skipping"
-          return false
-        end
-
-        if options[:gzip] == true
-          # Tar and gzip like a boss
-          `tar czf #{filename} -C #{options[:dir]} ./`
-        elsif options[:bzip] == true
-          # Bzippit
-          `tar cfj #{filename} -C #{options[:dir]} ./`
-        else
-          # Totally boss taring code, yo
-          `tar cf #{filename} -C #{options[:dir]} ./`
-        end
-
-        if ::FileTest.exists? "./#{filename}"
-          puts " - #{filename} created"
-        end
-
-        return true
-      end # self.create
-    end # Tar
   end # Archiver
 end
