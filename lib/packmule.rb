@@ -25,12 +25,7 @@ module Packmule
 
     # Read the Packfile and exit if it doesn't exist
     puts "Reading the Packfile..."
-    begin
-      config = YAML::load_file('./Packfile')
-    rescue
-      puts "No Packfile found, stopping"
-      exit;
-    end
+    config = self.read_packfile
 
     # Options
     opt = {
@@ -67,6 +62,17 @@ module Packmule
 
     puts "Packaging complete"
     exit
+  end
+
+  ##
+  # Reads configuration from the `Packfile`
+  def self.read_packfile
+    begin
+      config = YAML::load_file('./Packfile')
+    rescue
+      puts "No Packfile found, stopping"
+      exit;
+    end
   end
 
   ##
