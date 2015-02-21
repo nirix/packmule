@@ -73,6 +73,8 @@ module Packmule
       puts "No Packfile found, stopping"
       exit;
     end
+
+    return config
   end
 
   ##
