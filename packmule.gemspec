@@ -16,5 +16,5 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_runtime_dependency 'shebang', '~> 0.1'
-  gem.add_runtime_dependency 'rubyzip', '~> 1.1.0'
+  gem.add_runtime_dependency 'rubyzip', '~> 1.1'
 end
