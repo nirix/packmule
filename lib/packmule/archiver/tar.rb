@@ -15,8 +15,8 @@ module Packmule
       ##
       # Creates the tar file, like a BOSS!
       def self.create(options)
-        options = {:gzip => false, :bzip => false}.merge(options)
-        filename = "#{options[:filename]}.tar" + (options[:gzip] ? '.gz' : (options[:bzip] ? '.bz2' : ''))
+        options = {:gzip => false, :bzip => false, :xz => false}.merge(options)
+        filename = "#{options[:filename]}.tar" + (options[:gzip] ? '.gz' : (options[:bzip] ? '.bz2' : (options[:xz] ? '.xz' : '')))
 
         # Make sure it doesn't exist..
         if ::FileTest.exists? "./#{filename}"
@@ -30,6 +30,8 @@ module Packmule
         elsif options[:bzip] == true
           # Bzippit
           `tar cfj #{filename} -C #{options[:dir]} ./`
+        elsif options[:xz] == true
+          `tar cf - -C #{options[:dir]} ./ | xz -zf - > #{filename}`
         else
           # Totally boss taring code, yo
           `tar cf #{filename} -C #{options[:dir]} ./`

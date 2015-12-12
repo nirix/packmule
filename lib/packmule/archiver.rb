@@ -28,6 +28,9 @@ module Packmule
         elsif format == 'tar.bz2'
           # Tarbz2, I got nothing...
           Packmule::Archiver::Tar.create(options.merge({:bzip => true}))
+        elsif format == 'tar.xz'
+          # Tarxz, better than Tarbz2
+          Packmule::Archiver::Tar.create(options.merge({:xz => true}))
         end
       end
 
