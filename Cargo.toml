@@ -1,0 +1,9 @@
+[package]
+name = "packmule"
+version = "0.1.0"
+authors = ["Jack Polgar <jack@polgar.id.au>"]
+edition = "2018"
+
+[dependencies]
+clap = "2.31"
+serde_yaml = "0.8"

@@ -1,0 +1,12 @@
+package-as: MyProject
+formats:
+    - zip
+    - tar.gz
+ignore:
+    - .DS_Store
+    - badfile.bad
+    - logs/
+    - assets/*.psd
+commands:
+    - date > build-date.txt
+    - echo "test" > test.txt

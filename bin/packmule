@@ -1,6 +1,0 @@
-#!/usr/bin/env ruby
-
-require 'packmule'
-require 'packmule/cli'
-
-Shebang.run
