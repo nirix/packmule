@@ -1,6 +1,8 @@
 extern crate clap;
 
+use std::io;
 use clap::{Arg, App, SubCommand};
+use packer::Package;
 
 const PACKMULE_VERSION: &str = "0.8.0";
 
@@ -33,13 +35,26 @@ fn main() {
     let matches = app.get_matches();
 
     if let Some(pack_opts) = matches.subcommand_matches("pack") {
-        let result: bool = packer::pack(
+        let result: io::Result<Package> = packer::pack(
             pack_opts.value_of("FILE").unwrap_or_default(),
             pack_opts.value_of("VERSION").unwrap_or_default()
         );
 
-        if !result {
-            std::process::exit(0)
+        if result.is_err() {
+            std::process::exit(1)
         }
+
+        match result {
+            Ok(v) => package_created(v),
+            Err(e) => println!("Error: {}", e),
+        }
+    }
+}
+
+fn package_created(package: Package) {
+    if package.has_version {
+        println!("{} packaged as {}", package.name, package.version);
+    } else {
+        println!("Packaged as {}", package.name);
     }
 }
