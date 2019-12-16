@@ -4,9 +4,9 @@ use std::io;
 use clap::{Arg, App, SubCommand};
 use packer::Package;
 
-const PACKMULE_VERSION: &str = "0.8.0";
-
 mod packer;
+
+const PACKMULE_VERSION: &str = "0.8.0";
 
 fn main() {
     let app = App::new("Packmule")
@@ -40,13 +40,9 @@ fn main() {
             pack_opts.value_of("VERSION").unwrap_or_default()
         );
 
-        if result.is_err() {
-            std::process::exit(1)
-        }
-
         match result {
             Ok(v) => package_created(v),
-            Err(e) => println!("Error: {}", e),
+            Err(e) => display_error_and_exit(e),
         }
     }
 }
@@ -57,4 +53,9 @@ fn package_created(package: Package) {
     } else {
         println!("Packaged as {}", package.name);
     }
+}
+
+fn display_error_and_exit(error: std::io::Error) {
+    println!("{}", error);
+    std::process::exit(1);
 }
