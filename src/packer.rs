@@ -46,7 +46,7 @@ pub fn pack(file: &str, version: &str) -> io::Result<Package> {
     ignored_files.push(String::from("Packfile"));
 
     // Copy to temp dir and run everything there
-    let tmp_dir: PathBuf = copy_to_temp_dir(&packfile_dir, &ignored_files)?;
+    let tmp_dir: TempDir = copy_to_temp_dir(&packfile_dir, &ignored_files)?;
 
     // Check if we have any commands and run them
     if has_commands {
@@ -64,23 +64,35 @@ pub fn pack(file: &str, version: &str) -> io::Result<Package> {
 
 // Create and copy to a temporary directory before doing anything
 // with the files.
-fn copy_to_temp_dir(source_dir: &PathBuf, ignored_files: &Vec<String>) -> io::Result<PathBuf> {
+fn copy_to_temp_dir(source_dir: &PathBuf, ignored_files: &Vec<String>) -> io::Result<TempDir> {
     let tmp_dir = TempDir::new("packmule")?;
     let source_dir_str = source_dir.to_str().unwrap();
 
     // Copy files from source directory
     let walker = WalkDir::new(source_dir).follow_links(true);
     let dir_iter = walker.into_iter();
+    let tmp_dir_path = tmp_dir.path().to_str().unwrap();
+    println!("{}", tmp_dir_path);
     for entry in dir_iter.filter_entry(|e| filter_files(e, &source_dir_str, &ignored_files)) {
+        let entry = entry.unwrap();
+
+        // let file_name = entry.file_name().to_str().unwrap();
+        let source_path = format!("{}/", &source_dir.to_str().unwrap());
+        let relative_path = entry.path().to_str().unwrap().replace(&source_path, "");
         
-        println!("{:?}", entry.unwrap());
+        // Create directory, don't copy, we don't want to accidentally copy ignored files
+        if entry.path().is_dir() {
+            fs::create_dir_all(format!("{}/{}", tmp_dir_path, relative_path))?;
+        } else {
+            fs::copy(entry.path(), format!("{}/{}", tmp_dir_path, relative_path))?;
+        }
     }
 
-    return Ok(tmp_dir.path().to_owned());
+    return Ok(tmp_dir);
 }
 
+// TODO: Find a way to not re-create glob::Patern's for every file.
 fn filter_files(entry: &DirEntry, source_dir: &str, ignored_files: &Vec<String>) -> bool {
-    let file_name = entry.file_name().to_str().unwrap();
     let source_path = format!("{}/", source_dir);
     let relative_path = entry.path().to_str().unwrap().replace(&source_path, "");
 
@@ -88,8 +100,8 @@ fn filter_files(entry: &DirEntry, source_dir: &str, ignored_files: &Vec<String>)
         let ignored_pattern = format!("*{}", ignored);
         let pattern = Pattern::new(&ignored_pattern).unwrap();
 
-        // Exact match
         if entry.path().is_dir() {
+            // Append slash to end of directories when matching
             let dir_name = format!("{}/", &relative_path);
 
             if pattern.matches(&dir_name) {
@@ -105,11 +117,7 @@ fn filter_files(entry: &DirEntry, source_dir: &str, ignored_files: &Vec<String>)
     return true;
 }
 
-fn remove_ignored_files(tmp_dir: &PathBuf, ignored_files: Vec<String>) -> io::Result<()> {
-    return Ok(());
-}
-
-fn run_commands(tmp_dir: &PathBuf, commands: Vec<String>) -> io::Result<()> {
+fn run_commands(tmp_dir: &TempDir, commands: Vec<String>) -> io::Result<()> {
     return Ok(());
 }
 
