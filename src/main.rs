@@ -30,6 +30,21 @@ fn main() {
                        .takes_value(true)
                        .help("Version to package as, e.g. 1.2.3")
                 )
+                .arg(
+                    Arg::with_name("INPUT")
+                        .short("i")
+                        .long("input")
+                        .takes_value(true)
+                        .help("Directory to be packaged, defaults to the Packfile directory")
+                )
+                .arg(
+                    Arg::with_name("OUTPUT")
+                        .short("o")
+                        .long("output")
+                        .takes_value(true)
+                        .default_value("pkg")
+                        .help("Directory where the arhives will be created")
+                )
         );
 
     let matches = app.get_matches();
@@ -37,7 +52,9 @@ fn main() {
     if let Some(pack_opts) = matches.subcommand_matches("pack") {
         let result: io::Result<Package> = packer::pack(
             pack_opts.value_of("FILE").unwrap_or_default(),
-            pack_opts.value_of("VERSION").unwrap_or_default()
+            pack_opts.value_of("VERSION").unwrap_or_default(),
+            pack_opts.value_of("INPUT").unwrap_or(""),
+            pack_opts.value_of("OUTPUT").unwrap_or_default()
         );
 
         match result {
